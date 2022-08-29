@@ -3,6 +3,7 @@ import data
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import numpy as np
+import matplotlib
 
 # Make figure summarizing results for Alder et al. data
 
@@ -47,7 +48,7 @@ ax0.plot(x, y, ".", color="grey", markersize=1)
 ax0.plot([26,26], [0, twoPhase.pwlf.predict(26)], "k--")
 ax0.plot(26, twoPhase.pwlf.predict(26), "ko")
 ax0.set_ylim(3.5, 12)
-ax0.plot(twoPhase.xHat, twoPhase.yHat, "b-", markersize=1)
+ax0.plot(twoPhase.xHat, twoPhase.yHat, "blue", markersize=1)
 
 ax0.legend(title=f"$R^2= {twoPhase.pwlf.r_squared():.4f}$")
 
@@ -59,16 +60,17 @@ ax2.set_ylabel("Division Rate (1/year)")
 
 phases_3 = np.array(['0-26 yrs', '26-82 yrs'])
 x_axis_3 = np.array([1, 1.35])
-ax2.bar(x_axis_3 + 0.1, twoPhase.r_values_100bp, width=0.1, color="#648FFF", label="100 bp", zorder=3)
-ax2.bar(x_axis_3, twoPhase.r_values_50bp, width=0.1, color="#DC267F", label="50 bp", zorder=3)
-ax2.bar(x_axis_3 - 0.1, twoPhase.r_values_30bp, width=0.1, color="#FE6100", label="30 bp", zorder=3)
+ax2.bar(x_axis_3 + 0.1, twoPhase.r_values_100bp, width=0.1, color="#2c7bb6", label="100 bp", zorder=3)
+ax2.bar(x_axis_3, twoPhase.r_values_50bp, width=0.1, color="black", label="50 bp", zorder=3)
+ax2.bar(x_axis_3 - 0.1, twoPhase.r_values_30bp, width=0.1, color="#d7191c", label="30 bp", zorder=3)
 ax2.set_xticks(ticks=x_axis_3, labels=phases_3)
 ax2.tick_params(which="both")
 
 ax2.grid(which="both", zorder=0)
 ax2.set_xlabel("Phases")
 ax2.set_yscale('log')
-
+ax2.set_yticks([1])
+ax2.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 
 # Division Numbers
 ax4.text(-0.15, 1.1, "B2", transform=ax4.transAxes,
@@ -76,9 +78,9 @@ ax4.text(-0.15, 1.1, "B2", transform=ax4.transAxes,
 ax4.set_ylabel("Divisions")
 ax4.set_xlabel("Age (years)")
 ax4.grid()
-ax4.plot(twoPhase.res, twoPhase.div30, color="#FE6100")
-ax4.plot(twoPhase.res, twoPhase.div50, color="#DC267F")
-ax4.plot(twoPhase.res, twoPhase.div100, color="#648FFF")
+ax4.plot(twoPhase.breakpoints, twoPhase.div_30bp, color="#d7191c")
+ax4.plot(twoPhase.breakpoints, twoPhase.div_50bp, color="black", linewidth=1.5)
+ax4.plot(twoPhase.breakpoints, twoPhase.div_100bp, color="#2c7bb6")
 ax4.plot([26, 26],[0, 160],"k--")
 ax4.set_ylim(0, 120)
 

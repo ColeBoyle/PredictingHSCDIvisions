@@ -58,9 +58,9 @@ plt.rcParams.update({'legend.edgecolor': 'black'})
 mm = 0.03937
 
 fig, ax1 = plt.subplots(figsize=(155*1/2*mm, 60*mm))
-ax1.plot(t, Dbar_list[0], label="100 bp", color="#d7191c")
+ax1.plot(t, Dbar_list[0], label="100 bp", color="#2c7bb6")
 ax1.plot(t, Dbar_list[1], label="65 bp", color="black", linewidth=2)
-ax1.plot(t, Dbar_list[2], label="30 bp", color="#2c7bb6")
+ax1.plot(t, Dbar_list[2], label="30 bp", color="#d7191c")
 ax1.legend(title=r"$\Delta L$")
 ax1.set_ylabel("Divisions")
 ax1.set_xlabel("Age (years)")
@@ -79,7 +79,7 @@ logDbar_list = []
 for dc in dc_list:
     logDbar_list += [logDbar(t, [p, rdc_N0/dc])]
 
-fig2, ax2 = plt.subplots(figsize=(155*1/2*mm, 80*mm ))
+fig2, ax2 = plt.subplots(figsize=(155*1/2*mm, 80*mm))
 ax2.plot(t, logDbar_list[0], label="100 bp", color="#d7191c")
 ax2.plot(t, logDbar_list[1], label="65 bp", color="black", linewidth=2)
 ax2.plot(t, logDbar_list[2], label="30 bp", color="#2c7bb6")

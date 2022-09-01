@@ -16,7 +16,6 @@ class fit_pwlf:
         self.aic = 0
         self.pwlf = pwlf.PiecewiseLinFit(self.xdata, self.ydata, seed=111, degree=self.degree)
         self.breakpoints = self.pwlf.fit(self.n_intervals)
-        print(self.breakpoints)
         self.xHat = np.linspace(min(self.xdata), max(self.xdata), num=10000)
         self.yHat = self.pwlf.predict(self.xHat)
         self.slopes = self.pwlf.slopes
@@ -24,7 +23,7 @@ class fit_pwlf:
         self.statStr = f"$R^2$ = {self.pwlf.r_squared():.4f}" \
                        f"\nAIC = {self.aic:.2f}"
         self.r_values_100bp, self.rt_100bp, self.div_100bp = self.getDiv(0.1)
-        self.r_values_50bp, self.rt_50bp, self.div_50bp = self.getDiv(0.05)
+        self.r_values_65bp, self.rt_50bp, self.div_50bp = self.getDiv(0.05)
         self.r_values_150bp, self.rt_150bp, self.div_150bp = self.getDiv(0.15)
         self.r_values_30bp, self.rt_30bp, self.div_30bp = self.getDiv(0.03)
         self.r_values_65bp, self.rt_65bp, self.div_65bp = self.getDiv(0.065)
@@ -35,11 +34,11 @@ class fit_pwlf:
         for i, _ in enumerate(self.breakpoints[1:]):
             print("-" * 62)
             print(
-                f"| {self.breakpoints[i]:.2f} to {_:.2f} | {self.r_values_100bp[i]:.4f} to {self.r_values_30bp[i]:.4f}"
-                f"       | {self.div_100bp[i + 1] - self.div_100bp[i]:.2f} to {self.div_30bp[i + 1] - self.div_30bp[i]:.2f}        "
+                f"| {self.breakpoints[i]:.2f} to {_:.2f} | {self.r_values_65bp[i]:.4f} ({self.r_values_100bp[i]:.4f} to {self.r_values_30bp[i]:.4f})"
+                f"       | {self.div_65bp[i+1] - self.div_65bp[i]:.4f} ({self.div_100bp[i + 1] - self.div_100bp[i]:.4f} to {self.div_30bp[i + 1] - self.div_30bp[i]:.4f})        "
                 f"|")
         print("-" * 62)
-        print(f"| Total Divisions: {self.div_100bp[-1]:.2f} to {self.div_30bp[-1]:.2f} Over "
+        print(f"| Total Divisions: {self.div_65bp[-1]:.4f} ({self.div_100bp[-1]:.4f} to {self.div_30bp[-1]:.4f}) Over "
               f"{np.max(self.xdata) - np.min(self.xdata)} years           |")
         print("-" * 62)
 

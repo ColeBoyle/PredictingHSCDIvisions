@@ -28,13 +28,11 @@ AndreuData_gran = AndreuData_gran.astype("float64")
 AndreuData_age = AndreuData_age.astype("float64")
 
 # Alder 2018 Data
-
 AlderData_gran = np.array(
     [])
 
 AlderData_age = np.array(
     [])
-
 
 AlderData_age = np.delete(AlderData_age, np.argwhere(AlderData_gran == None))
 AlderData_gran = np.delete(AlderData_gran, np.argwhere(AlderData_gran == None))

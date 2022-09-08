@@ -4,7 +4,7 @@ library(latex2exp)
 #  data and recover division estimates
 
 set.seed(123)
-df <- read.csv("~/Path/To/AubertData");
+df <- read.csv("~/PathToData");
 
 data <- df[,c("age", "Granulo")];
 data <- na.omit(data);
@@ -21,7 +21,7 @@ poly_AIC = AIC(poly_model)
 coef <- unname(poly_model$coefficients)
 
 d_30 <- coef /-0.03
-d_50 <- coef / -0.05
+d_65 <- coef / -0.065
 d_100 <- coef / -0.1
 
 polyDiv <- function(t, params) {
@@ -31,10 +31,10 @@ polyDiv <- function(t, params) {
   predict <- a*t**3 + b*t**2 + c*t
 }
 plot(x,polyDiv(x,d_30), type="l", col="red", lwd=3, xlab="Age (years)", ylab="Divisions")
-lines(x, polyDiv(x,d_50), col="#2ECC71", lwd=3)
+lines(x, polyDiv(x,d_65), col="black", lwd=5)
 lines(x, polyDiv(x,d_100), col="blue", lwd=3)
 grid(col="#5D6D7E")
-legend(0,130, c("30 bp","50 bp", "100 bp"), lwd=c(3,3,3), col=c("red","#2ECC71", "blue"), title=TeX(r'($\Delta L$)'), bg = "white")
+legend(0,130, c("30 bp","65 bp", "100 bp"), lwd=c(3,5,3), col=c("red","black", "blue"), title=TeX(r'($\Delta L$)'), bg = "white")
 
 
 ########################## log-fit
@@ -53,14 +53,14 @@ logDiv <- function(t, params) {
   predict <- a2*log(a3*t +1)
   
 }
+
 log_d_30 <- c(log_coef[2]/-0.03, log_coef[3])
-log_d_50 <- c(log_coef[2]/-0.05, log_coef[3])
+log_d_65 <- c(log_coef[2]/-0.065, log_coef[3])
 log_d_100 <- c(log_coef[2]/-0.1, log_coef[3])
 
 plot(x,logDiv(x,log_d_30), type="l", col="red", lwd=3, xlab="Age (years)", ylab="Divisions")
-lines(x, logDiv(x,log_d_50), col="#2ECC71", lwd=3)
+lines(x, logDiv(x,log_d_65), col="black", lwd=5)
 lines(x, logDiv(x,log_d_100), col="blue", lwd=3)
 
 grid(col="#5D6D7E")
-legend(0,120, c("30 bp","50 bp", "100 bp"), lwd=c(3,3,3), col=c("red","#2ECC71", "blue"), title=TeX(r'($\Delta L$)'), bg = "white")
-
+legend(0,120, c("30 bp","65 bp", "100 bp"), lwd=c(3,5,3), col=c("red","black", "blue"), title=TeX(r'($\Delta L$)'), bg = "white")

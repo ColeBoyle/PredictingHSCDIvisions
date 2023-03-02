@@ -6,8 +6,8 @@ import fit_pwlf as fit
 # Plot 1 to 6 phase models on data in single figure
 
 # Set data to use
-x = data.AubertData_age
-y = data.AubertData_gran
+x = data.AlderData_age
+y = data.AlderData_gran
 
 # Do all n-phase model fits (1 to 6 phases)
 fits = [fit.fit_pwlf(1, 1, x, y),
@@ -47,7 +47,8 @@ for i, ax in enumerate(axs.values()):
     ax.plot(x, y, ".", color="grey")
     ax.plot(fits[i].xHat, fits[i].yHat, color="blue")
     ax.legend(title=f"    {i + 1}-phase\n$R^2 = {fits[i].pwlf.r_squared():.4f}$\n"
-                    f"$\Delta$ AIC = {fits[i].aic - fits[-1].aic:.2f}", shadow=True)
+                    f"$\Delta$ AIC = {fits[i].aic - fits[-1].aic:.2f}\n"
+              f"$\Delta$ BIC = {fits[i].bic - fits[3].bic:.2f}", shadow=True)
 
 axs.get("E").set_xlabel("Age (years)")
 axs.get("F").set_xlabel("Age (years)")

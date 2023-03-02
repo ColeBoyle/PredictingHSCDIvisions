@@ -7,7 +7,8 @@ import pwlf
 
 class fit_pwlf:
 
-    def __init__(self, interval, degree, xdata, ydata):
+    def __init__(self, interval, degree, xdata, ydata, bp):
+        self.bp = bp
         self.n_intervals = interval
         self.degree = degree
         self.statStr = ""
@@ -15,11 +16,14 @@ class fit_pwlf:
         self.ydata = ydata
         self.aic = 0
         self.pwlf = pwlf.PiecewiseLinFit(self.xdata, self.ydata, seed=111, degree=self.degree)
-        self.breakpoints = self.pwlf.fit(self.n_intervals)
+        #print(self.pwlf.fit(self.n_intervals))
+        self.breakpoints = bp
+        self.pwlf.fit_with_breaks(self.bp)
         self.xHat = np.linspace(min(self.xdata), max(self.xdata), num=10000)
         self.yHat = self.pwlf.predict(self.xHat)
         self.slopes = self.pwlf.slopes
-        self.aic = aic(self.pwlf.n_parameters + 1, len(self.xdata), self.pwlf.ssr)
+        self.aic = aic(self.pwlf.n_parameters + 1 + len(bp), len(self.xdata), self.pwlf.ssr)
+        self.bic = bic(self.pwlf.n_parameters + 1, len(self.xdata), self.pwlf.ssr)
         self.statStr = f"$R^2$ = {self.pwlf.r_squared():.4f}" \
                        f"\nAIC = {self.aic:.2f}"
         self.r_values_100bp, self.rt_100bp, self.div_100bp = self.getDiv(0.1)
@@ -35,7 +39,7 @@ class fit_pwlf:
             print("-" * 62)
             print(
                 f"| {self.breakpoints[i]:.2f} to {_:.2f} | {self.r_values_65bp[i]:.4f} ({self.r_values_100bp[i]:.4f} to {self.r_values_30bp[i]:.4f})"
-                f"       | {self.div_65bp[i+1] - self.div_65bp[i]:.4f} ({self.div_100bp[i + 1] - self.div_100bp[i]:.4f} to {self.div_30bp[i + 1] - self.div_30bp[i]:.4f})        "
+                f"       | {self.div_65bp[i + 1] - self.div_65bp[i]:.4f} ({self.div_100bp[i + 1] - self.div_100bp[i]:.4f} to {self.div_30bp[i + 1] - self.div_30bp[i]:.4f})        "
                 f"|")
         print("-" * 62)
         print(f"| Total Divisions: {self.div_65bp[-1]:.4f} ({self.div_100bp[-1]:.4f} to {self.div_30bp[-1]:.4f}) Over "
@@ -68,6 +72,12 @@ class fit_pwlf:
 def aic(k, n, sse):
     sigma_hat_sq = sse / n
     LL = - n / 2 * np.log(sigma_hat_sq) - 1 / (2 * sigma_hat_sq) * sse - n / 2 * np.log(2 * np.pi)
-    return 2 * k - 2 * LL
+    result = 2 * k - 2 * LL
+    return result
 
 
+def bic(k, n, sse):
+    sigma_hat_sq = sse / n
+    LL = - n / 2 * np.log(sigma_hat_sq) - 1 / (2 * sigma_hat_sq) * sse - n / 2 * np.log(2 * np.pi)
+    result = np.log(n) * k - 2 * LL
+    return result

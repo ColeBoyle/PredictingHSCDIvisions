@@ -10,7 +10,7 @@ import matplotlib
 x = data.AlderData_age
 y = data.AlderData_gran
 
-twoPhase = fit.fit_pwlf(2, 1, x, y)
+twoPhase = fit.fit_pwlf(2, 1, x, y, [0, 26, 82])
 
 # Set up figure
 fontsize = 7
@@ -28,7 +28,7 @@ plt.rcParams.update({'xtick.minor.size': 1.5})
 plt.rcParams.update({'legend.edgecolor': 'black'})
 
 mm = 0.03937
-fig = plt.figure(figsize=(155*1/3*mm, 115*mm))
+fig = plt.figure(figsize=(155*1/2*mm, 115*mm))
 gs = gridspec.GridSpec(3, 1)
 
 ax0 = fig.add_subplot(gs[0])

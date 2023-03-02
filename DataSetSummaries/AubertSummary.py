@@ -11,8 +11,21 @@ import numpy as np
 x = data.AubertData_age
 y = data.AubertData_gran
 
-twoPhase = fit.fit_pwlf(2, 1, x, y)
-threePhase = fit.fit_pwlf(3, 1, x, y)
+
+bp_2 = [0, 20.9, 102]
+bp_3 = [0, 0.9510914, 24.2078681, 102]
+
+div_2_30bp = [0.27091, 0.08842]
+div_2_65bp = [1.2503538, 0.4080923]
+div_2_100bp = [0.81273, 0.26526]
+
+
+div_3_30bp = [19.0286667, 2.0854667, 0.8844667]
+div_3_65bp = [8.7824615, 0.9625231, 0.4082154]
+div_3_100bp = [5.70860, 0.62564, 0.26534]
+
+twoPhase = fit.fit_pwlf(2, 1, x, y, bp_2)
+threePhase = fit.fit_pwlf(3, 1, x, y, bp_3)
 
 # Set up figure
 fontsize = 7
@@ -49,18 +62,19 @@ plt.setp(ax5.get_yticklabels(), visible=False)
 plt.setp(ax0.get_xticklabels(), visible=False)
 plt.setp(ax1.get_xticklabels(), visible=False)
 
-ax4.set_xticks([0, 23, 40, 60, 80, 100])
-ax5.set_xticks([0, 21, 40, 60, 80, 100])
+ax4.set_xticks([0.95, 24.2, 40, 60, 80, 100])
+ax5.set_xticks([0, 20.9, 40, 60, 80, 100])
+
 # Fit models to data
 ax0.text(-0.15, 1.1, string.ascii_uppercase[0], transform=ax0.transAxes,
          size=fontsize + 2, weight='bold')
 ax0.set_title("3-phase Model", weight='bold')
 ax0.set_ylabel("Telomere Length (kbp)")
 ax0.plot(x, y, ".", color="grey", markersize=1)
-ax0.plot([23, 23], [0, threePhase.pwlf.predict(23)], "k--")
-ax0.plot(23, threePhase.pwlf.predict(23), "ko")
-ax0.plot(1, threePhase.pwlf.predict(1), "ko")
-ax0.plot([1, 1], [0, threePhase.pwlf.predict(1)], "k--")
+ax0.plot([bp_3[2], bp_3[2]], [0, threePhase.pwlf.predict(bp_3[2])], "k--")
+ax0.plot(bp_3[2], threePhase.pwlf.predict(bp_3[2]), "ko")
+ax0.plot(bp_3[1], threePhase.pwlf.predict(bp_3[1]), "ko")
+ax0.plot([bp_3[1], bp_3[1]], [0, threePhase.pwlf.predict(bp_3[1])], "k--")
 ax0.set_ylim(3.5, 15)
 ax0.plot(threePhase.xHat, threePhase.yHat, "blue")
 ax0.legend(title=f"$R^2= {threePhase.pwlf.r_squared():.4f}$\n"
@@ -69,8 +83,8 @@ ax0.legend(title=f"$R^2= {threePhase.pwlf.r_squared():.4f}$\n"
 ax1.set_title("2-phase Model", weight='bold')
 ax1.plot(x, y, ".", color="grey", markersize=1)
 ax1.plot(twoPhase.xHat, twoPhase.yHat, "blue")
-ax1.plot([21, 21], [0, threePhase.pwlf.predict(23)], "k--")  # change
-ax1.plot(21, threePhase.pwlf.predict(21), "ko")  # change
+ax1.plot([bp_2[1], bp_2[1]], [0, threePhase.pwlf.predict(bp_2[1])], "k--")  # change
+ax1.plot(bp_2[1], threePhase.pwlf.predict(bp_2[1]), "ko")  # change
 ax1.legend(title=f"$R^2= {twoPhase.pwlf.r_squared():.4f}$\n"
                  f"$\Delta$ AIC = {twoPhase.aic - threePhase.aic:.2f}", shadow=True)
 
@@ -79,7 +93,7 @@ ax2.text(-0.15, 1.1, string.ascii_uppercase[2], transform=ax2.transAxes,
          size=fontsize + 2, weight='bold')
 ax2.set_ylabel("Division Rate (1/year)")
 
-phases_3 = np.array(['0-1 yrs', '1-23 yrs', '23-102 yrs'])
+phases_3 = np.array(['0-0.95 yrs', '0.95-24.2 yrs', '24.2-102 yrs'])
 x_axis_3 = np.array([1, 1.5, 2])
 ax2.bar(x_axis_3 + 0.1, threePhase.r_values_100bp, width=0.1, color="#2c7bb6", label="100 bp", zorder=3)
 ax2.bar(x_axis_3, threePhase.r_values_65bp, width=0.1, color="black", label="65 bp", zorder=3)
@@ -94,7 +108,7 @@ ax2.set_yscale('log')
 ax2.set_yticks([1, 10])
 ax2.get_yaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 
-phases_3 = np.array(['0-21 yrs', '21-102 yrs'])
+phases_3 = np.array([f'0-{bp_2[1]:.1f} yrs', f'{bp_2[1]:.1f}-102 yrs'])
 x_axis_3 = np.array([1, 1.4])
 ax3.bar(x_axis_3 + 0.1, twoPhase.r_values_100bp, width=0.1, color="#2c7bb6", label="100 bp", zorder=3)
 ax3.bar(x_axis_3, twoPhase.r_values_65bp, width=0.1, color="black", label="65 bp", zorder=3)
@@ -112,11 +126,11 @@ ax4.grid()
 ax4.plot(threePhase.breakpoints, threePhase.div_30bp, color="#d7191c")
 ax4.plot(threePhase.breakpoints, threePhase.div_65bp, color="black", linewidth=1.5)
 ax4.plot(threePhase.breakpoints, threePhase.div_100bp, color="#2c7bb6")
-ax4.plot([23, 23], [0, 160], "k--")
-ax4.plot([1, 1], [0, 160], "k--")
+ax4.plot([bp_3[2], bp_3[2]], [0, 160], "k--")
+ax4.plot([bp_3[1], bp_3[1]], [0, 160], "k--")
 ax4.set_ylim(0, 153)
 
-ax5.plot([21, 21], [0, 160], "k--")
+ax5.plot([bp_2[1], bp_2[1]], [0, 160], "k--")
 ax5.grid()
 ax5.plot(twoPhase.breakpoints, twoPhase.div_30bp, color="#d7191c")
 ax5.plot(twoPhase.breakpoints, twoPhase.div_65bp, color="black", linewidth=1.5)

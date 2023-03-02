@@ -5,7 +5,7 @@ import numpy as np
 
 # Aubert 2012 Data
 
-AubertData = pd.read_csv(r'~/PathToData')  # Add path to Aubert Data
+AubertData = pd.read_csv(r'~/Path/to/Data')  # Add path to Aubert Data
 
 
 AubertData_gran_base = pd.DataFrame(AubertData, columns=['Granulo']).to_numpy()[:, 0]
@@ -16,7 +16,7 @@ AubertData_gran = np.delete(AubertData_gran_base, np.argwhere(np.isnan(AubertDat
 
 # Andreu 2022 Data
 
-AndreuData = pd.read_csv(r'~/PathToData')  # Add path to Andreu Data
+AndreuData = pd.read_csv(r'~/Path/to/Data')  # Add path to Andreu Data
 
 AndreuData_age_base = AndreuData.iloc[:, 1].to_numpy()[8:]
 AndreuData_gran_base = AndreuData.iloc[:, 14].to_numpy()[8:]
